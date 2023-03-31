@@ -71,14 +71,17 @@ namespace Google.LibraryWrapper.Java
             AndroidJavaObject result = base.Invoke(methodName, args);
             foreach (AndroidJavaObject arg in args)
             {
-                arg?.Dispose();
+                if (arg != null)
+                {
+                    arg.Dispose();
+                }
             }
             return result;
         }
 
         public override bool Equals(object obj)
         {
-            return (obj is JavaProxy proxy && _rawObject.Equals(proxy._rawObject))
+            return (obj is JavaProxy && _rawObject.Equals(((JavaProxy)obj)._rawObject))
                     || (obj is IntPtr && obj.Equals(_rawObject));
         }
 
@@ -89,7 +92,7 @@ namespace Google.LibraryWrapper.Java
 
         public override string ToString()
         {
-            return $"{GetType()}: {_rawObject} <C# proxy Java object>";
+            return GetType() + ": " + _rawObject + " <C# proxy Java object>";
         }
     }
 }

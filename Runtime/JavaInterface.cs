@@ -18,10 +18,6 @@ namespace Google.LibraryWrapper.Java
 {
     public interface JavaInterface
     {
-        public class AnonymousImplementation {}
-
-        public abstract class CallbackHelper {}
-
         IntPtr GetRawObject();
     }
 }

@@ -71,9 +71,9 @@ namespace Google.LibraryWrapper.Java
             try
             {
                 AndroidJNI.PushLocalFrame(0);
-                if (obj is JavaObject other)
+                if (obj is JavaObject)
                 {
-                    jvalue[] args = new jvalue[] { ToJvalue(other) };
+                    jvalue[] args = new jvalue[] { ToJvalue(obj) };
                     return AndroidJNI.CallBooleanMethod(_rawObject, _equalsMethodId, args);
                 }
             }
@@ -96,23 +96,22 @@ namespace Google.LibraryWrapper.Java
 
         protected static jvalue ToJvalue(object argument)
         {
-            switch (argument)
+            if (argument == null)
             {
-                case null:
-                    return new jvalue { l = IntPtr.Zero };
-                case string casted:
-                    return new jvalue { l = AndroidJNI.NewString(casted) };
-                default:
-                    #if ENABLE_MONO && !NET_STANDARD
-                    IntPtr rawObject = (IntPtr) (dynamic) argument;
-                    #else
-                    IntPtr rawObject =
-                            (IntPtr) argument
-                                    .GetType()
-                                    .GetMethod("GetRawObject", Type.EmptyTypes)
-                                    .Invoke(argument, null);
-                    #endif
-                    return new jvalue { l = rawObject };
+                return new jvalue { l = IntPtr.Zero };
+            }
+            else if (argument is string)
+            {
+                return new jvalue { l = Utils.NewString((string)argument) };
+            }
+            else
+            {
+                IntPtr rawObject =
+                        (IntPtr)argument
+                                .GetType()
+                                .GetMethod("GetRawObject", Type.EmptyTypes)
+                                .Invoke(argument, null);
+                return new jvalue { l = rawObject };
             }
         }
 
@@ -122,7 +121,7 @@ namespace Google.LibraryWrapper.Java
             return new AndroidJavaObject(_rawObject);
             #else
             return
-                    (AndroidJavaObject) typeof(AndroidJavaObject)
+                    (AndroidJavaObject)typeof(AndroidJavaObject)
                             .GetConstructor(
                                 BindingFlags.NonPublic | BindingFlags.Instance,
                                 null,
