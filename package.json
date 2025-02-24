@@ -1,6 +1,6 @@
 {
   "name": "com.google.librarywrapper.java",
-  "version": "0.2.1",
+  "version": "1.0.0",
   "displayName": "Library Wrapper Unity Common",
   "description": "Library Wrapper is a code generator that parses Java API and produces wrapper APIs in Unity C#. This Unity package contains library code shared by all Library Wrapper generated C# code.",
   "unity": "2017.1",
