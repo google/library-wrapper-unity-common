@@ -52,6 +52,7 @@ namespace Google.LibraryWrapper.Java
         {
             if (_rawObject != IntPtr.Zero)
             {
+                AndroidJNI.AttachCurrentThread();
                 AndroidJNI.DeleteGlobalRef(_rawObject);
             }
         }
